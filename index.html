@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>下载</title>
+ 
+<style>
+  html,body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  /* .wrap{
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  } */
+  .head{
+    width: 100%;
+    height: 6rem;
+    line-height: 6rem;
+    text-align: center;
+    background-color: #f7f7f7;
+  }
+  .head span{
+    font-size: 3rem;
+  }
+  .contentBox{
+    background: url(./image/bg@3x.png) bottom center no-repeat;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    overflow-y: auto;
+  }
+  .biaoti{
+    text-align: center;
+  }
+  .biaoImg{
+    width: 40rem;
+    margin-top: 10rem ;
+  }
+  .together{
+    width: 27.5rem;
+    height: 5rem;
+    line-height: 5px;
+    background:linear-gradient(90deg,rgba(106,87,243,1),rgba(60,46,241,1));
+    opacity:0.9;
+    border-radius:25px;
+    margin: 40px auto;
+  }
+  .togeFont{
+    font-size:30px;
+    font-family:PingFang SC;
+    font-weight:bold;
+    color:rgba(255,255,255,1);
+    line-height:70px;
+    text-shadow:0px 2px 4px rgba(14,0,177,0.6);
+  }
+  .ma{
+    background: url(./image/bg_erweima@3x.png) bottom center no-repeat;
+    position: fixed;
+    width: 62rem;
+    height: 60rem;
+    background-size: 60rem;
+  }
+  .erwei{
+    position: absolute;
+    top: 48rem;
+    left: 20rem;
+    width: 21rem;
+  }
+  .regisiter-btn {
+    width:20rem;
+    height:6rem;
+    background: linear-gradient(90deg, rgb(157, 126, 248) 0%, rgba(75, 71, 226, 1) 100%);
+    box-shadow:0px 7px 19px 1px rgba(0,17,90,0.2);
+    border-radius:40px;
+    position: relative;
+    margin-top: 45rem;
+    color: #f7f7f7;
+    font-size: 2rem;
+  }
+  .wxtip{background: rgba(0,0,0,0.8); text-align: center; position: fixed; left:0; top: 0; width: 100%; height: 100%; z-index: 998; display: none;}
+  .wxtip-icon{width: 52px; height: 67px; background: url(./image/bgw.png) no-repeat; display: block; position: absolute; right: 20px; top: 20px;}
+  .wxtip-txt{margin-top: 107px; color: #fff; font-size: 30px; line-height: 1.5;}
+</style></head>
+
+<body>
+<div>
+  <div class="head">
+    <span>下载页面</span>
+  </div>
+  <div class="contentBox">
+    <div class="biaoti">
+      <img class="biaoImg" src="./assets/biaoti@3x.png" alt="">
+    </div>
+    <div class="together">
+      <span class="togeFont">一起来为守护能源做贡献吧</span>
+    </div>
+    <div class="wxtip" id="JweixinTip">
+      <span class="wxtip-icon"></span>
+      <p class="wxtip-txt">点击右上角...<br>选择在浏览器中打开</p>
+    </div>
+    <div class="biaoti">
+      <div class="ma"></div>
+      <img class="erwei" src="./assets/tupian@3x.png" alt="">
+      <button id="JdownApp" class="regisiter-btn" onclick="downloadApk()">立刻下载</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  // 第一步：判断微信的UA。
+  var ua = navigator.userAgent;
+
+  var isWeixin =  !!/MicroMessenger/i.test(ua);
+  var url = "";
+  // 第二步：引入默认隐藏层。
+
+
+  // 第三步：添加CSS样式
+
+  // 第四步：点击按钮显示隐藏层，点击隐藏层关闭，总的JS代码如下：
+  function weixinTip(ele){
+    var ua = navigator.userAgent;
+    var isWeixin = !!/MicroMessenger/i.test(ua);
+    let isAndroid = /android/i.test(ua);
+    if(isWeixin && isAndroid){
+      ele.onclick=function(e){
+        window.event? window.event.returnValue = false : e.preventDefault();
+        document.getElementById('JweixinTip').style.display='block';
+      }
+      document.getElementById('JweixinTip').onclick=function(){
+        this.style.display='none';
+      }
+    }
+  }
+  function init() {
+    $.get("/api/index/getVersionAndUrl",function(data){
+      url = data.data.androidUrl
+    });
+  }
+  var btn1 = document.getElementById('JdownApp');//下载一
+  weixinTip(btn1);
+  init();
+
+  function downloadApk() {
+    let ua = navigator.userAgent;
+    let isAndroid = /android/i.test(ua);
+    let isIOS = /(iPhone|iPad|iPod|IOS)/i.test(ua);
+    let isWechat = /microMessenger/i.test(ua);
+    var src = 'https://energy-image.oss-cn-beijing.aliyuncs.com/app-release.apk';
+    if(isIOS){
+      src = 'https://testflight.apple.com/join/slSTusH7';
+    }
+    var form = document.createElement('form');
+    form.action = src;
+    document.getElementsByTagName('body')[0].appendChild(form);
+    form.submit();
+  }
+</script>
+
+</body></html>
